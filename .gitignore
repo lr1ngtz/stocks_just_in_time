@@ -2,3 +2,9 @@
 __pycache__/
 
 db.sqlite3
+
+# Sublime Text
+stocks_just_in_time.sublime-project
+stocks_just_in_time.sublime-workspace
+
+.env
