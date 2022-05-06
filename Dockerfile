@@ -8,4 +8,4 @@ RUN python -m pip install pipenv
 COPY Pipfile Pipfile.lock /code/
 RUN pipenv install --system
 COPY . /code/
-# CMD [""]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
