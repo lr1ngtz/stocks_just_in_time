@@ -4,7 +4,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 WORKDIR /code
-COPY Pipfile Pipfile.lock /code/
 RUN python -m pip install pipenv
+COPY Pipfile Pipfile.lock /code/
 RUN pipenv install --system
 COPY . /code/
+# CMD [""]
