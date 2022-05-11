@@ -21,7 +21,7 @@ class StockSymbol(models.Model):
 class Quote(models.Model):
     current_price = models.DecimalField(max_digits=10, decimal_places=2)
     change = models.DecimalField(max_digits=10, decimal_places=2)
-    percent_change = models.DecimalField(max_digits=10, decimal_places=2)
+    percent_change = models.DecimalField(max_digits=8, decimal_places=5)
     high_price_of_the_day = models.DecimalField(max_digits=10, decimal_places=2)
     low_price_of_the_day = models.DecimalField(max_digits=10, decimal_places=2)
     open_price_of_the_day = models.DecimalField(max_digits=10, decimal_places=2)
