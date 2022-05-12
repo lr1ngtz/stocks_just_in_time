@@ -6,13 +6,13 @@ from stocks.models import StockSymbol, Quote
 
 @admin.register(StockSymbol)
 class StockSymbolAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("symbol", "description")
 
 
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
     list_display = ("symbol_name", "current_price", "time_stamp")
-    list_filter = ("stock_symbol__symbol", "current_price", "time_stamp")
+    list_filter = ("time_stamp",)
     search_fields = ("stock_symbol__symbol",)
 
     @display(ordering="stock_symbol", description="Symbol")
