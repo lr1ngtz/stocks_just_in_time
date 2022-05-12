@@ -18,3 +18,7 @@ class QuoteAdmin(admin.ModelAdmin):
     @display(ordering="stock_symbol", description="Symbol")
     def symbol_name(self, obj):
         return obj.stock_symbol.symbol
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related("stock_symbol")

@@ -1,15 +1,9 @@
 from django.db import models
 
-
-class CommonInfo(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
+from core.models import BaseModel
 
 
-class StockSymbol(CommonInfo):
+class StockSymbol(BaseModel):
     description = models.CharField(max_length=255)
     display_symbol = models.CharField(max_length=32)
     figi = models.CharField(max_length=64)
@@ -21,7 +15,7 @@ class StockSymbol(CommonInfo):
     type = models.CharField(max_length=32)
 
 
-class Quote(CommonInfo):
+class Quote(BaseModel):
     current_price = models.DecimalField(max_digits=10, decimal_places=2)
     change = models.DecimalField(max_digits=10, decimal_places=2)
     percent_change = models.DecimalField(max_digits=8, decimal_places=5)
