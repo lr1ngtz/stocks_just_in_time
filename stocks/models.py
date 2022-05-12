@@ -29,5 +29,5 @@ class Quote(CommonInfo):
     low_price_of_the_day = models.DecimalField(max_digits=10, decimal_places=2)
     open_price_of_the_day = models.DecimalField(max_digits=10, decimal_places=2)
     previous_close_price = models.DecimalField(max_digits=10, decimal_places=2)
-    time_stamp = models.DateTimeField()
+    timestamp = models.DateTimeField()
     stock_symbol = models.ForeignKey(StockSymbol, on_delete=models.CASCADE)

@@ -11,8 +11,8 @@ class StockSymbolAdmin(admin.ModelAdmin):
 
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
-    list_display = ("symbol_name", "current_price", "time_stamp")
-    list_filter = ("time_stamp",)
+    list_display = ("symbol_name", "current_price", "timestamp")
+    list_filter = ("timestamp",)
     search_fields = ("stock_symbol__symbol",)
 
     @display(ordering="stock_symbol", description="Symbol")
