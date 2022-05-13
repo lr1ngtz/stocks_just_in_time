@@ -1,6 +1,6 @@
 import requests
 
-from core.constants import API_KEY
+from core.constants import API_KEY, WRONG_SYMBOL_OUTPUT
 
 
 class FinnhubConnection:
@@ -18,6 +18,14 @@ class FinnhubConnection:
         api_url = (
             f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={self.api_key}"
         )
+
+        if not symbol:
+            return {"response": "The symbol is required!"}
+
         response = requests.get(api_url)
         quote = response.json()
+
+        if quote == WRONG_SYMBOL_OUTPUT:
+            return {"response": "The symbol doesn't exist!"}
+
         return quote
