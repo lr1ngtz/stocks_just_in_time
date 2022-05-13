@@ -132,6 +132,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "user.User"
 
+FINNHUB_API_KEY = os.environ.get("FINNHUB_API_KEY", "c9v5f0aad3i5k782gl3g")
+
 # LOGGING = {
 #     "version": 1,
 #     "filters": {

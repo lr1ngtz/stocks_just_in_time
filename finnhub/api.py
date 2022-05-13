@@ -1,31 +1,25 @@
 import requests
 
-from core.constants import API_KEY, WRONG_SYMBOL_OUTPUT
 
+class FinnhubAPI:
+    token = None
+    base_url = "https://finnhub.io/api/v1/"
 
-class FinnhubConnection:
-    api_key = API_KEY
+    def __init__(self, token) -> None:
+        self.token = token
 
     def get_stocks(self) -> list:
-        api_url = (
-            f"https://finnhub.io/api/v1/stock/symbol?exchange=US&token={self.api_key}"
-        )
-        response = requests.get(api_url)
-        stocks = response.json()
-        return stocks
+        api_url = f"{self.base_url}stock/symbol?exchange=US&token={self.token}"
+
+        return self._send_get(api_url)
 
     def get_quote(self, symbol: str) -> dict:
-        api_url = (
-            f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={self.api_key}"
-        )
+        api_url = f"{self.base_url}quote?symbol={symbol}&token={self.token}"
 
-        if not symbol:
-            return {"response": "The symbol is required!"}
+        return self._send_get(api_url)
 
-        response = requests.get(api_url)
-        quote = response.json()
+    def _send_get(self, url):
+        response = requests.get(url)
+        api_data = response.json()
 
-        if quote == WRONG_SYMBOL_OUTPUT:
-            return {"response": "The symbol doesn't exist!"}
-
-        return quote
+        return api_data
