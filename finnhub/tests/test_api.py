@@ -1,64 +1,110 @@
-from unittest.mock import patch
+import json
 
 from django.conf import settings
-import requests
+from django.test import override_settings
+import requests_mock
 
 from finnhub.api import FinnhubAPI
 
 
-# class MockResponse:
-#     @staticmethod
-#     def json():
-#         return {"m_key": "m_value"}
+def json_response(file: str):
+
+    with open(f"{settings.BASE_DIR}/finnhub/tests/fixtures/{file}") as f:
+        json_response = json.load(f)
+
+    return json_response
 
 
+@override_settings(FINNHUB_API_KEY=None)
 def test_FinnhubConnection_get_stocks__api_key_absence():
-    with patch.object(settings, "FINNHUB_API_KEY", return_value=None):
-        result = FinnhubAPI(settings.FINNHUB_API_KEY)
+    token = settings.FINNHUB_API_KEY
+    expected_result = json_response("invalid_api.json")
+
+    with requests_mock.Mocker() as m:
+        m.get(
+            f"https://finnhub.io/api/v1/stock/symbol?exchange=US&token={token}",
+            json=expected_result,
+        )
+        result = FinnhubAPI(token)
         result = result.get_stocks()
-        expected_result = {"error": "Invalid API key"}
+
         assert result == expected_result
 
 
-# def test_FinnhubConnection_get_stocks__success(monkeypatch):
-#     def mock_get(*args, **kwargs):
-#         return MockResponse()
+def test_FinnhubConnection_get_stocks__success():
+    token = settings.FINNHUB_API_KEY
+    expected_result = json_response("stocks_success.json")
 
-#     monkeypatch.setattr(requests, "get", mock_get)
+    with requests_mock.Mocker() as m:
+        m.get(
+            f"https://finnhub.io/api/v1/stock/symbol?exchange=US&token={token}",
+            json=expected_result,
+        )
+        result = FinnhubAPI(token)
+        result = result.get_stocks()
 
-#     result = FinnhubAPI(settings.FINNHUB_API_KEY)
-#     result = result.get_stocks()
-#     assert result["m_key"] == "m_value"
+        assert result == expected_result
 
 
+@override_settings(FINNHUB_API_KEY=None)
 def test_FinnhubConnection_get_quote__api_key_absence():
-    with patch.object(settings, "FINNHUB_API_KEY", return_value=None):
-        result = FinnhubAPI(settings.FINNHUB_API_KEY)
-        result = result.get_quote("AAPL")
-        expected_result = {"error": "Invalid API key"}
+    token = settings.FINNHUB_API_KEY
+    expected_result = json_response("invalid_api.json")
+    symbol = "some_symbol"
+
+    with requests_mock.Mocker() as m:
+        m.get(
+            f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={token}",
+            json=expected_result,
+        )
+        result = FinnhubAPI(token)
+        result = result.get_quote(symbol)
+
         assert result == expected_result
 
 
-# def test_FinnhubConnection_get_quote__empty_symbol():
-#     result = FinnhubAPI(settings.FINNHUB_API_KEY)
-#     result = result.get_quote("")
-#     expected_result = {"response": "The symbol is required!"}
-#     assert result == expected_result
+def test_FinnhubConnection_get_quote__empty_symbol():
+    token = settings.FINNHUB_API_KEY
+    expected_result = json_response("empty_or_null_symbol.json")
+
+    with requests_mock.Mocker() as m:
+        m.get(
+            f"https://finnhub.io/api/v1/quote?symbol=&token={token}",
+            json=expected_result,
+        )
+        result = FinnhubAPI(token)
+        result = result.get_quote("")
+
+        assert result == expected_result
 
 
-# def test_FinnhubConnection_get_quote__wrong_symbol():
-#     result = FinnhubAPI(settings.FINNHUB_API_KEY)
-#     result = result.get_quote("some_symbol")
-#     expected_result = {"response": "The symbol doesn't exist!"}
-#     assert result == expected_result
+def test_FinnhubConnection_get_quote__wrong_symbol():
+    token = settings.FINNHUB_API_KEY
+    expected_result = json_response("empty_or_null_symbol.json")
+    symbol = "some_symbol"
+
+    with requests_mock.Mocker() as m:
+        m.get(
+            f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={token}",
+            json=expected_result,
+        )
+        result = FinnhubAPI(token)
+        result = result.get_quote(symbol)
+
+        assert result == expected_result
 
 
-# def test_FinnhubConnection_get_quote__success(monkeypatch):
-#     def mock_get(*args, **kwargs):
-#         return MockResponse()
+def test_FinnhubConnection_get_quote__success():
+    token = settings.FINNHUB_API_KEY
+    expected_result = json_response("quote_success.json")
+    symbol = "some_symbol"
 
-#     monkeypatch.setattr(requests, "get", mock_get)
+    with requests_mock.Mocker() as m:
+        m.get(
+            f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={token}",
+            json=expected_result,
+        )
+        result = FinnhubAPI(token)
+        result = result.get_quote(symbol)
 
-#     result = FinnhubAPI(settings.FINNHUB_API_KEY)
-#     result = result.get_quote("AAPL")
-#     assert result["m_key"] == "m_value"
+        assert result == expected_result

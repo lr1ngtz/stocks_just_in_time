@@ -1,5 +1,7 @@
 import requests
 
+from finnhub.exceptions import FinnhubAPIException
+
 
 class FinnhubAPI:
     """
@@ -67,7 +69,15 @@ class FinnhubAPI:
         return self._send_get(api_url)
 
     def _send_get(self, url: str):
-        response = requests.get(url)
+        try:
+            response = requests.get(url)
+        except requests.exceptions.ConnectionError as err:
+            raise FinnhubAPIException("Problems with connection", err)
+        except requests.exceptions.HTTPError:
+            raise FinnhubAPIException("Something went wrong.")
+        except requests.exceptions.RequestException as err:
+            raise FinnhubAPIException("Something went wrong.", err)
+
         api_data = response.json()
 
         return api_data
