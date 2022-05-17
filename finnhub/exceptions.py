@@ -1,0 +1,2 @@
+class FinnhubAPIException(Exception):
+    pass
