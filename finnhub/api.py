@@ -19,8 +19,6 @@ class FinnhubAPI:
         """
         Call the API in order to obtain info about all available stocks.
 
-        returns: list
-
         output example: [
         {
             "currency": "USD",
@@ -50,8 +48,6 @@ class FinnhubAPI:
 
         args: symbol -> str
 
-        returns: dict
-
         output example: {
             "c": 147.11,
             "d": 4.55,
@@ -69,14 +65,22 @@ class FinnhubAPI:
         return self._send_get(api_url)
 
     def _send_get(self, url: str):
+        """
+        Sends request to the passed url and returns
+        json response.
+        """
         try:
             response = requests.get(url)
-        except requests.exceptions.ConnectionError as err:
-            raise FinnhubAPIException("Problems with connection", err)
-        except requests.exceptions.HTTPError:
-            raise FinnhubAPIException("Something went wrong.")
-        except requests.exceptions.RequestException as err:
-            raise FinnhubAPIException("Something went wrong.", err)
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.RequestException,
+        ) as err:
+            raise FinnhubAPIException(err)
+
+        if response.status_code in (401, 429, 500):
+            error = response.json()
+            raise FinnhubAPIException(error["error"])
 
         api_data = response.json()
 
