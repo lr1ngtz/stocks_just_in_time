@@ -134,24 +134,24 @@ AUTH_USER_MODEL = "user.User"
 
 FINNHUB_API_KEY = os.environ.get("FINNHUB_API_KEY", "c9v5f0aad3i5k782gl3g")
 
-LOGGING = {
-    "version": 1,
-    "filters": {
-        "require_debug_true": {
-            "()": "django.utils.log.RequireDebugTrue",
-        }
-    },
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "filters": ["require_debug_true"],
-            "class": "logging.StreamHandler",
-        }
-    },
-    "loggers": {
-        "django.db.backends": {
-            "level": "DEBUG",
-            "handlers": ["console"],
-        }
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "filters": {
+#         "require_debug_true": {
+#             "()": "django.utils.log.RequireDebugTrue",
+#         }
+#     },
+#     "handlers": {
+#         "console": {
+#             "level": "DEBUG",
+#             "filters": ["require_debug_true"],
+#             "class": "logging.StreamHandler",
+#         }
+#     },
+#     "loggers": {
+#         "django.db.backends": {
+#             "level": "DEBUG",
+#             "handlers": ["console"],
+#         }
+#     },
+# }

@@ -6,7 +6,7 @@ from finnhub.api import FinnhubAPI
 
 def create_or_update_stock_symbol():
     finnhub_api = FinnhubAPI(settings.FINNHUB_API_KEY)
-    finnhub_stock_symbols = finnhub_api.get_stocks()[:1000]
+    finnhub_stock_symbols = finnhub_api.get_stocks()
     for symbol in finnhub_stock_symbols:
         obj, created = StockSymbol.objects.update_or_create(
             symbol=symbol.get("symbol"),

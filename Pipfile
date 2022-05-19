@@ -10,6 +10,7 @@ djangorestframework = "*"
 requests = "*"
 pytest = "*"
 requests-mock = "*"
+pytest-django = "*"
 
 [dev-packages]
 
