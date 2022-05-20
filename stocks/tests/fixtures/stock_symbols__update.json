@@ -1,0 +1,26 @@
+[
+    {
+        "currency": "PLN",
+        "description": "some desc1",
+        "displaySymbol": "BAC.PRO",
+        "figi": "BBG00Y054Z10",
+        "isin": null,
+        "mic": "XNYS",
+        "shareClassFIGI": "",
+        "symbol": "BAC.PRO",
+        "symbol2": "",
+        "type": "PUBLIC"
+    },
+    {
+        "currency": "PLN",
+        "description": "some desc2",
+        "displaySymbol": "AMVGF",
+        "figi": "BBG000QWB5H8",
+        "isin": null,
+        "mic": "OOTC",
+        "shareClassFIGI": "BBG001SCW488",
+        "symbol": "AMVGF",
+        "symbol2": "",
+        "type": "Common Stock"
+    }
+]
