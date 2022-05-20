@@ -19,33 +19,38 @@ def json_deserialize(file: str):
 
 @pytest.mark.django_db
 def test_create_or_update_stock_symbol__create():
-    assert StockSymbol.objects.count() == 0
+    before_count = StockSymbol.objects.count()
 
-    objs = StockSymbol.objects.all()
-    expected_result = json_deserialize("stock_symbols__create.json")
+    finnhub_response = json_deserialize("stock_symbols__create.json")
 
-    with patch.object(FinnhubAPI, "get_stocks", return_value=expected_result):
+    with patch.object(FinnhubAPI, "get_stocks", return_value=finnhub_response):
         create_or_update_stock_symbol()
+        after_count = StockSymbol.objects.count()
 
-        assert StockSymbol.objects.count() == 2
-        assert objs[0].symbol == expected_result[0].get("symbol")
-        assert objs[0].description == expected_result[0].get("description")
+        assert before_count + 2 == after_count
 
 
 @pytest.mark.django_db
 def test_create_or_update_stock_symbol__update():
-    assert StockSymbol.objects.count() == 0
+    before_count = StockSymbol.objects.count()
 
-    objs = StockSymbol.objects.all()
-    create_list = json_deserialize("stock_symbols__create.json")
+    finnhub_response = json_deserialize("stock_symbols__create.json")
     update_list = json_deserialize("stock_symbols__update.json")
 
-    with patch.object(FinnhubAPI, "get_stocks", return_value=create_list):
+    with patch.object(FinnhubAPI, "get_stocks", return_value=finnhub_response):
         create_or_update_stock_symbol()
-        assert StockSymbol.objects.count() == 2
+        after_count = StockSymbol.objects.count()
+
+        assert before_count + 2 == after_count
+        create_or_update_stock_symbol()
 
     with patch.object(FinnhubAPI, "get_stocks", return_value=update_list):
         create_or_update_stock_symbol()
-        assert StockSymbol.objects.count() == 2
-        assert objs[0].description != create_list[0].get("description")
-        assert objs[0].description == update_list[0].get("description")
+
+        stock_symbols_descriptions = list(
+            StockSymbol.objects.values_list("description", flat=True)
+        )
+        for stock in update_list:
+            assert stock["description"] in stock_symbols_descriptions
+
+        assert before_count + 2 == after_count

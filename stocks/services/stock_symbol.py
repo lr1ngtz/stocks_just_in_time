@@ -4,9 +4,10 @@ from stocks.models import StockSymbol
 from finnhub.api import FinnhubAPI
 
 
-def create_or_update_stock_symbol():
+def create_or_update_stock_symbol() -> dict:
     finnhub_api = FinnhubAPI(settings.FINNHUB_API_KEY)
     finnhub_stock_symbols = finnhub_api.get_stocks()
+    info = {"created": 0, "updated": 0}
     for symbol in finnhub_stock_symbols:
         obj, created = StockSymbol.objects.update_or_create(
             symbol=symbol.get("symbol"),
@@ -22,5 +23,9 @@ def create_or_update_stock_symbol():
             },
         )
 
-    # return updated or created dict
-    return
+        if created:
+            info["created"] += 1
+        else:
+            info["updated"] += 1
+
+    return info
