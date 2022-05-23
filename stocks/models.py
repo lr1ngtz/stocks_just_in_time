@@ -3,6 +3,11 @@ from django.db import models
 from core.models import BaseModel
 
 
+class QuoteManager(models.Manager):
+    def save_quote(self, **kwargs):
+        return super().create(**kwargs)
+
+
 class StockSymbol(BaseModel):
     description = models.CharField(max_length=255)
     display_symbol = models.CharField(max_length=32)
@@ -25,3 +30,4 @@ class Quote(BaseModel):
     previous_close_price = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField()
     stock_symbol = models.ForeignKey(StockSymbol, on_delete=models.CASCADE)
+    objects = QuoteManager()
