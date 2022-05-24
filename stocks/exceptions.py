@@ -1,0 +1,2 @@
+class UnexpectedQuoteInfoException(Exception):
+    pass

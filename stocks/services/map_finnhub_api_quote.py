@@ -1,4 +1,5 @@
 from datetime import datetime
+from stocks.exceptions import UnexpectedQuoteInfoException
 
 from stocks.models import StockSymbol
 
@@ -8,7 +9,7 @@ def map_finnhub_api_quote(quote_info: dict, stock_symbol: StockSymbol) -> dict:
 
     for key in quote_info:
         if key not in mandatory_keys:
-            raise Exception()
+            raise UnexpectedQuoteInfoException()
 
     if quote_info.get("t"):
         quote_info["t"] = datetime.fromtimestamp(quote_info["t"])
