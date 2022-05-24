@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from stocks.exceptions import SymbolDoesNotExistException
 
 from stocks.models import Quote, StockSymbol
 from finnhub.api import FinnhubAPI
@@ -14,7 +15,7 @@ def create_quote(symbol: str) -> Quote | None:
     try:
         stock_symbol = StockSymbol.objects.get(symbol=symbol)
     except ObjectDoesNotExist:
-        return None
+        raise SymbolDoesNotExistException()
 
     finnhub_quote = map_finnhub_api_quote(finnhub_quote, stock_symbol)
     quote = Quote.objects.create(**finnhub_quote)
