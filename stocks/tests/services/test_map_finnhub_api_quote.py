@@ -1,27 +1,7 @@
-import json
 from datetime import datetime
 
-import pytest
-from django.conf import settings
-
-from stocks.exceptions import UnexpectedQuoteInfoException
 from stocks.services.map_finnhub_api_quote import map_finnhub_api_quote
-
-
-def json_deserialize(file: str):
-
-    with open(f"{settings.BASE_DIR}/stocks/tests/fixtures/{file}") as f:
-        json_response = json.load(f)
-
-    return json_response
-
-
-def test_map_finnhub_api_quote__fail():
-    quote_info = json_deserialize("quote__fail.json")
-    stock_symbol = None
-
-    with pytest.raises(UnexpectedQuoteInfoException):
-        map_finnhub_api_quote(quote_info, stock_symbol)
+from stocks.tests.utils import json_deserialize
 
 
 def test_map_finnhub_api_quote__success():

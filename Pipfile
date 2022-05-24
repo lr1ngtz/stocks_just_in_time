@@ -11,6 +11,7 @@ requests = "*"
 pytest = "*"
 requests-mock = "*"
 pytest-django = "*"
+factory-boy = "*"
 
 [dev-packages]
 
