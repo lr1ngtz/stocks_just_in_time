@@ -1,6 +1,6 @@
 from datetime import datetime
-from stocks.exceptions import UnexpectedQuoteInfoException
 
+from stocks.exceptions import UnexpectedQuoteInfoException
 from stocks.models import StockSymbol
 
 
