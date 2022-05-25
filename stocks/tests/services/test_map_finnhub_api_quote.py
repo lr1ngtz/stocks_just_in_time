@@ -20,4 +20,10 @@ def test_map_finnhub_api_quote__success():
     result = map_finnhub_api_quote(quote_info, stock_symbol)
 
     assert result["current_price"] == expected_result["current_price"]
+    assert result["change"] == expected_result["change"]
+    assert result["percent_change"] == expected_result["percent_change"]
+    assert result["high_price_of_the_day"] == expected_result["high_price_of_the_day"]
+    assert result["low_price_of_the_day"] == expected_result["low_price_of_the_day"]
+    assert result["open_price_of_the_day"] == expected_result["open_price_of_the_day"]
+    assert result["previous_close_price"] == expected_result["previous_close_price"]
     assert result["timestamp"] == expected_result["timestamp"]

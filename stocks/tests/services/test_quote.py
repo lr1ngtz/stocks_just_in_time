@@ -9,9 +9,10 @@ from stocks.tests.utils import json_deserialize
 
 
 @pytest.mark.django_db
-def test_create_quote__success(stock_symbol):
+def test_create_quote__success(apple_stock):
     finnhub_response = json_deserialize("quote__success.json")
 
     with patch.object(FinnhubAPI, "get_quote", return_value=finnhub_response):
-        create_quote(stock_symbol.symbol)
+        create_quote(apple_stock.symbol)
+
         assert Quote.objects.count() == 1

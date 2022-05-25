@@ -4,6 +4,6 @@ from factories import StockSymbolFactory
 
 
 @pytest.fixture
-def stock_symbol():
+def apple_stock():
     stock_symbol = StockSymbolFactory(symbol="AAPL")
     return stock_symbol
