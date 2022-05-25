@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
 import pytest
-from stocks.models import Quote
 
 from stocks.services.quote import create_quote
 from finnhub.api import FinnhubAPI
@@ -15,4 +14,4 @@ def test_create_quote__success(apple_stock):
     with patch.object(FinnhubAPI, "get_quote", return_value=finnhub_response):
         create_quote(apple_stock.symbol)
 
-        assert Quote.objects.count() == 1
+        assert apple_stock.quote_set.count() == 1
