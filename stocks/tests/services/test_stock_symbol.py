@@ -1,20 +1,11 @@
-import json
 from unittest.mock import patch
 
 import pytest
-from django.conf import settings
 
 from stocks.models import StockSymbol
 from stocks.services.stock_symbol import create_or_update_stock_symbol
 from finnhub.api import FinnhubAPI
-
-
-def json_deserialize(file: str):
-
-    with open(f"{settings.BASE_DIR}/stocks/tests/fixtures/{file}") as f:
-        json_response = json.load(f)
-
-    return json_response
+from stocks.tests.utils import json_deserialize
 
 
 @pytest.mark.django_db
