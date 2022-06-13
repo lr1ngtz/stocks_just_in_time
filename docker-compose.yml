@@ -10,6 +10,11 @@ services:
       - POSTGRES_HOST=db
     ports:
       - "5433:5432"
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    entrypoint: redis-server --appendonly yes
   web:
     build: .
     volumes:
@@ -23,3 +28,4 @@ services:
       - POSTGRES_HOST=db
     depends_on:
       - db
+    

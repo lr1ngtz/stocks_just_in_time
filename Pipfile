@@ -12,6 +12,7 @@ pytest = "*"
 requests-mock = "*"
 pytest-django = "*"
 factory-boy = "*"
+celery = {extras = ["redis"], version = "*"}
 
 [dev-packages]
 
