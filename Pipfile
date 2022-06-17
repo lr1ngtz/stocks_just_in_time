@@ -13,6 +13,7 @@ requests-mock = "*"
 pytest-django = "*"
 factory-boy = "*"
 celery = {extras = ["redis"], version = "*"}
+django-celery-beat = "*"
 
 [dev-packages]
 
