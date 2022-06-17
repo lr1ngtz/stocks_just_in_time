@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 
 from stocks.tasks import create_quote_task
-from stocks.services.quote import create_quote
 
 
 class Command(BaseCommand):
@@ -11,5 +10,4 @@ class Command(BaseCommand):
         parser.add_argument("quote", type=str)
 
     def handle(self, *args, **options):
-        # create_quote_task.delay(options["quote"])
-        create_quote(options["quote"])
+        create_quote_task.delay(options["quote"])
