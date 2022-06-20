@@ -10,6 +10,11 @@ services:
       - POSTGRES_HOST=db
     ports:
       - "5433:5432"
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    entrypoint: redis-server --appendonly yes
   web:
     build: .
     volumes:
@@ -23,3 +28,39 @@ services:
       - POSTGRES_HOST=db
     depends_on:
       - db
+      - redis
+  celery:
+    build: .
+    volumes:
+      - .:/code
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+    command: celery -A core worker --loglevel=info
+    depends_on:
+      - redis
+      - db
+  celery-beat:
+    build: .
+    volumes:
+      - .:/code
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+    command: celery -A core beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    depends_on:
+      - redis
+      - db
+  flower:
+    image: mher/flower
+    environment: 
+        - CELERY_BROKER_URL=${CELERY_BROKER_URL}
+        - FLOWER_PORT=5555
+    ports: 
+        - 5555:5555
+    depends_on: 
+        - redis
