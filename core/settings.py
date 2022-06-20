@@ -135,7 +135,7 @@ AUTH_USER_MODEL = "user.User"
 
 FINNHUB_API_KEY = os.environ.get("FINNHUB_API_KEY", "c9v5f0aad3i5k782gl3g")
 
-CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
 
 # LOGGING = {
 #     "version": 1,
