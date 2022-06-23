@@ -7,5 +7,8 @@ from user.models import User
 
 class Portfolio(BaseModel):
     name = models.CharField(max_length=255)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    stock_symbols = models.ManyToManyField(StockSymbol)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stock_symbols = models.ManyToManyField(StockSymbol, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
