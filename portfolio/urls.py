@@ -4,7 +4,7 @@ from rest_framework import routers
 from portfolio.views import PortfolioViewSet
 
 router = routers.DefaultRouter()
-router.register(r"", PortfolioViewSet)
+router.register(r"", PortfolioViewSet, basename="portfolio")
 
 
 urlpatterns = [

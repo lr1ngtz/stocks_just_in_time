@@ -9,6 +9,8 @@ class StockSymbolFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = StockSymbol
 
+    symbol = factory.Faker("word")
+
 
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -24,3 +26,12 @@ class PortfolioFactory(factory.django.DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     name = factory.Faker("word")
+
+    # @factory.post_generation
+    # def stock_symbols(self, create, extracted, **kwargs):
+    #     if not create:
+    #         return
+
+    #     if extracted:
+    #         for group in extracted:
+    #             self.stock_symbols.add(group)

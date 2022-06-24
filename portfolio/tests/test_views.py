@@ -1,11 +1,10 @@
+from django.urls import reverse
 import pytest
-
-from portfolio.tests.utils import json_deserialize
 
 
 @pytest.mark.django_db
 def test_PortfolioViewSet_get__portfolio_absence(api_client):
-    endpoint = "/portfolios/"
+    endpoint = reverse("portfolio-list")
     response = api_client().get(endpoint)
 
     assert response.status_code == 200
@@ -14,7 +13,7 @@ def test_PortfolioViewSet_get__portfolio_absence(api_client):
 
 @pytest.mark.django_db
 def test_PortfolioViewSet_get__success(api_client, portfolio):
-    endpoint = "/portfolios/"
+    endpoint = reverse("portfolio-list")
     response = api_client().get(endpoint)
 
     assert response.status_code == 200
@@ -28,23 +27,21 @@ def test_PortfolioViewSet_get__success(api_client, portfolio):
 
 @pytest.mark.django_db
 def test_PortfolioViewSet_post__required_fields_absence(api_client):
-    endpoint = "/portfolios/"
-    data = json_deserialize("portfolio__required_fields_absence.json")
+    endpoint = reverse("portfolio-list")
+    data = {"invalid_field_1": 1, "invalid_field_2": "invalid_data"}
     response = api_client().post(endpoint, data=data)
-    expected_result = json_deserialize(
-        "portfolio__required_fields_absence_response.json"
-    )
 
     assert response.status_code == 400
-    assert response.data == expected_result
+    assert "user" in response.data.keys()
+    assert "name" in response.data.keys()
 
 
 @pytest.mark.django_db
 def test_PortfolioViewSet_post__invalid_data(api_client):
-    endpoint = "/portfolios/"
-    data = json_deserialize("portfolio__invalid_data.json")
+    endpoint = reverse("portfolio-list")
+    data = {"name": "some_name", "user": "some_user"}
     response = api_client().post(endpoint, data=data)
-    expected_result = json_deserialize("portfolio__invalid_data_response.json")
+    expected_result = {"user": ["Incorrect type. Expected pk value, received str."]}
 
     assert response.status_code == 400
     assert response.data == expected_result
@@ -52,10 +49,10 @@ def test_PortfolioViewSet_post__invalid_data(api_client):
 
 @pytest.mark.django_db
 def test_PortfolioViewSet_post__null_data(api_client):
-    endpoint = "/portfolios/"
-    data = json_deserialize("portfolio__null_data.json")
+    endpoint = reverse("portfolio-list")
+    data = {"name": "some_name", "user": ""}
     response = api_client().post(endpoint, data=data)
-    expected_result = json_deserialize("portfolio__null_data_response.json")
+    expected_result = {"user": ["This field may not be null."]}
 
     assert response.status_code == 400
     assert response.data == expected_result
@@ -63,9 +60,8 @@ def test_PortfolioViewSet_post__null_data(api_client):
 
 @pytest.mark.django_db
 def test_PortfolioViewSet_post__success(api_client, user):
-    endpoint = "/portfolios/"
-    data = json_deserialize("portfolio__success.json")
-    data["user"] = user.id
+    endpoint = reverse("portfolio-list")
+    data = {"name": "some_name", "user": user.id}
     response = api_client().post(endpoint, data=data)
 
     assert response.status_code == 201
@@ -75,7 +71,7 @@ def test_PortfolioViewSet_post__success(api_client, user):
 
 @pytest.mark.django_db
 def test_PortfolioViewSet_portfolio_get__success(api_client, portfolio):
-    endpoint = "/portfolios/" + str(portfolio.id) + "/"
+    endpoint = reverse("portfolio-detail", args=(portfolio.id,))
     response = api_client().get(endpoint)
 
     assert response.status_code == 200
@@ -86,10 +82,16 @@ def test_PortfolioViewSet_portfolio_get__success(api_client, portfolio):
 
 @pytest.mark.django_db
 def test_PortfolioViewSet_portfolio_put__success(api_client, portfolio):
-    endpoint = "/portfolios/" + str(portfolio.id) + "/"
-    data = json_deserialize("portfolio_put__success.json")
-    data["user"] = portfolio.user.id
+    endpoint = reverse("portfolio-detail", args=(portfolio.id,))
+    data = {"id": 1, "name": "updated_name", "user": portfolio.user.id}
     response = api_client().put(endpoint, data=data)
 
     assert response.status_code == 200
     assert response.data["name"] == "updated_name"
+
+
+# # @pytest.mark.django_db
+# # def test_PortfolioViewSet_stock_symbols__get(api_client, portfolio, apple_stock):
+# #     endpoint = "/portfolios/" + str(portfolio.id) + "/stock_symbols/"
+# #     response = api_client().get(endpoint)
+# #     assert response.status_code == 201
