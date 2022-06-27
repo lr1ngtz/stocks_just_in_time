@@ -18,9 +18,8 @@ class PortfolioViewSet(viewsets.ModelViewSet):
         if request.method == "POST":
             serializer = CreateStockSymbolSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            portfolio.stock_symbols.delete_all()
+            portfolio.stock_symbols.clear()
             portfolio.stock_symbols.add(*serializer.validated_data["stock_symbols"])
-            portfolio.save()
         stock_symbols = portfolio.stock_symbols.all()
         serializer = StockSymbolSerializer(stock_symbols, many=True)
         return Response(serializer.data)
