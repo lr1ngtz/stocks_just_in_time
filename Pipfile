@@ -15,6 +15,7 @@ factory-boy = "*"
 celery = {extras = ["redis"], version = "*"}
 django-celery-beat = "*"
 flower = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 

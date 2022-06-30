@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.mixins import Response
+from rest_framework.permissions import IsAuthenticated
 
 from portfolio.serializers import PortfolioSerializer
 from portfolio.models import Portfolio
@@ -11,6 +12,7 @@ from stocks.serializers import StockSymbolSerializer, CreateStockSymbolSerialize
 class PortfolioViewSet(viewsets.ModelViewSet):
     queryset = Portfolio.objects.all()
     serializer_class = PortfolioSerializer
+    permission_classes = [IsAuthenticated]
 
     @action(methods=["GET", "POST"], detail=True)
     def stock_symbols(self, request, pk=None):
@@ -18,6 +20,7 @@ class PortfolioViewSet(viewsets.ModelViewSet):
         if request.method == "POST":
             serializer = CreateStockSymbolSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
+            # move this logic to service (clear and add)
             portfolio.stock_symbols.clear()
             portfolio.stock_symbols.add(*serializer.validated_data["stock_symbols"])
         stock_symbols = portfolio.stock_symbols.all()

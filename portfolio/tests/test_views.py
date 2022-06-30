@@ -20,6 +20,7 @@ def test_PortfolioViewSet_get__success(api_client, portfolio):
 
     endpoint_portfolio = response.data[0]
 
+    # check len and it should be 1
     assert endpoint_portfolio["user"] == portfolio.user.id
     assert endpoint_portfolio["id"] == portfolio.id
     assert endpoint_portfolio["name"] == portfolio.name
@@ -28,12 +29,14 @@ def test_PortfolioViewSet_get__success(api_client, portfolio):
 @pytest.mark.django_db
 def test_PortfolioViewSet_post__required_fields_absence(api_client):
     endpoint = reverse("portfolio-list")
-    data = {"invalid_field_1": 1, "invalid_field_2": "invalid_data"}
+    data = {}
     response = api_client().post(endpoint, data=data)
 
+    expected_fields = ["user", "name"]
+    required_keys = response.data.keys()
     assert response.status_code == 400
-    assert "user" in response.data.keys()
-    assert "name" in response.data.keys()
+    for field in expected_fields:
+        assert field in required_keys
 
 
 @pytest.mark.django_db
@@ -83,7 +86,7 @@ def test_PortfolioViewSet_portfolio_get__success(api_client, portfolio):
 @pytest.mark.django_db
 def test_PortfolioViewSet_portfolio_put__success(api_client, portfolio):
     endpoint = reverse("portfolio-detail", args=(portfolio.id,))
-    data = {"id": 1, "name": "updated_name", "user": portfolio.user.id}
+    data = {"id": portfolio.id, "name": "updated_name", "user": portfolio.user.id}
     response = api_client().put(endpoint, data=data)
 
     assert response.status_code == 200
