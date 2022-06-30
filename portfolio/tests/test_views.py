@@ -15,15 +15,13 @@ def test_PortfolioViewSet_get__portfolio_absence(api_client):
 def test_PortfolioViewSet_get__success(api_client, portfolio):
     endpoint = reverse("portfolio-list")
     response = api_client().get(endpoint)
+    endpoint_portfolio = response.data
 
     assert response.status_code == 200
-
-    endpoint_portfolio = response.data[0]
-
-    # check len and it should be 1
-    assert endpoint_portfolio["user"] == portfolio.user.id
-    assert endpoint_portfolio["id"] == portfolio.id
-    assert endpoint_portfolio["name"] == portfolio.name
+    assert len(endpoint_portfolio) == 1
+    assert endpoint_portfolio[0]["user"] == portfolio.user.id
+    assert endpoint_portfolio[0]["id"] == portfolio.id
+    assert endpoint_portfolio[0]["name"] == portfolio.name
 
 
 @pytest.mark.django_db
