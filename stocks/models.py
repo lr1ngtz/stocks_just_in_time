@@ -14,6 +14,9 @@ class StockSymbol(BaseModel):
     symbol2 = models.CharField(max_length=32)
     type = models.CharField(max_length=32)
 
+    def __str__(self):
+        return f"Stock Symbol: {self.symbol}"
+
 
 class Quote(BaseModel):
     current_price = models.DecimalField(max_digits=10, decimal_places=2)
